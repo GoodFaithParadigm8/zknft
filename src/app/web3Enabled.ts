@@ -16,8 +16,10 @@ export class Web3Enabled {
     this.assistInstance = null;
     this.blocknativeAPIKey = this.credentials.BLOCKNATIVE_KEY;
     this.infuraKey = this.credentials.INFURA_KEY;
-    // (for rinkeby) this.networkID = 4; 
-    this.networkID = 3; // for ropsten
+    // for rinkeby 
+    this.networkID = 4; 
+    // for ropsten
+    // this.networkID = 3; 
     // this.networkID = 1;
     this.state = {
       address: null

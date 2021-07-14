@@ -18,7 +18,7 @@
   max-width: 65rem;
   margin-left: auto;
   margin-right: auto;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   line-height: 150%;
   color: var(--light-gray);
 }
@@ -107,6 +107,13 @@ input:focus, textarea:focus {
   width: 18px;
   height: 18px;
   animation: spin 2s linear infinite;
+}
+
+.loading-message-1 {
+  color: black;
+}
+.loading-message-2 {
+  color: white;
 }
 
 @keyframes spin {

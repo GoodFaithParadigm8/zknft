@@ -50,20 +50,21 @@
   padding: .8em 1em;
   text-transform: uppercase;
   border: 3px var(--blue) solid;
-  border-image: linear-gradient(45deg, var(--light-teal) 0%, var(--dark-teal) 100%);
+  /* border-image: linear-gradient(45deg, var(--light-teal) 0%, var(--dark-teal) 100%); */
   border-image-slice: 1 1 1 1;
   font-weight: bold;
   background-color: black;
-  color: white;
+  color: var(--light-gray-2);;
+  border-radius: 4px;
 }
 
 .get-started:hover {
-  color: var(--light-gray-2);
+  color: white;
   background-color: var(--dark-gray);
 }
 
 .tri-cols {
-  margin-top: -9rem;
+  margin-top: -3rem;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
@@ -71,7 +72,7 @@
 .card {
   border-radius: 20px;
   padding: 1rem 1rem;
-  margin: 4rem 4rem;
+  margin: 2rem 2rem;
   text-align: center;
   border: 2px solid var(--gray);
 }
@@ -121,7 +122,7 @@
 @media only screen and (max-width: 1000px) {
   .tri-cols {
     display: block;
-    margin-top: -5rem;
+    margin-top: -1rem;
   }
   .main-img {
     margin-top: -1rem;

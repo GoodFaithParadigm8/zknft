@@ -66,6 +66,7 @@ export class HeaderComponent implements OnInit {
     this.wallet.showToast(`
     Your transaction was submitted! Track it <a href="${this.constants.ETH_EXPLORER + deposit.ethTx.hash}" target='_blank'>here</a>.
     `);
+    this.dismissNoFunds();
     const depositReceipt = await deposit.awaitVerifyReceipt();
     this.wallet.showToast(`
     Your transaction was verified!
@@ -78,8 +79,9 @@ export class HeaderComponent implements OnInit {
       feeToken: "ETH",
       ethAuthType: "ECDSA",
     });
+    this.dismissNotActivated();
     this.wallet.showToast(`
-    Your transaction was submitted! Track it <a href="${this.constants.ZK_EXPLORER + changePubkey.txHash.substring(8,)}">here</a>.
+    Your transaction was submitted! Track it <a href="${this.constants.ZK_EXPLORER + changePubkey.txHash.substring(8,)}" target='_blank'>here</a>.
     `);
   }
 }
