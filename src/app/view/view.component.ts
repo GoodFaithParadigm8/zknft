@@ -26,7 +26,7 @@ export class ViewComponent implements OnInit {
   ownedNftList: any;
   showOfferModal: boolean;
 
-  swapOffers: any;
+  nftSwapOffers: any;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public wallet: WalletService, public utils: UtilsService, public constants: ConstantsService, public nftDataService: NftDataService, public credentials: CredentialsService) {
     this.isOwner = false;
@@ -39,7 +39,7 @@ export class ViewComponent implements OnInit {
     this.showTransfer = false;
     this.ownedNftList = [];
     this.showOfferModal = false;
-    this.swapOffers = [];
+    this.nftSwapOffers = [];
    }
 
   ngOnInit(): void {
@@ -68,17 +68,16 @@ export class ViewComponent implements OnInit {
     let response = await fetch(tradeEndpoint, {
       method: 'GET'
     });
-    this.swapOffers = await response.json();
+    let swapOffers = await response.json();
 
     // Get NFT data for each offer if applicable
     // Otherwise populate with blank object
-    for (let o of this.swapOffers) {
+    for (let o of swapOffers) {
       let id = parseInt(o.data.tokenSell);
       if (id !== NaN) {
-        o["assetData"] = this.nftDataService.getData(id);
-      }
-      else {
-        o["assetData"] = {};
+        o["assetData"] = await this.nftDataService.getData(id);
+        o["nftId"] = id;
+        this.nftSwapOffers.push(o);
       }
     }
   }
@@ -91,7 +90,7 @@ export class ViewComponent implements OnInit {
     });
     // note that tx is an array of two transactions so we just grab the second one for now
     this.wallet.showToast(`
-    Your transaction was submitted! Track it <a href="${this.constants.ZK_EXPLORER + tx[1].txHash.substring(8,)}" target="_blank">here</a>.
+    Your transaction was submitted! Track it <a href="${this.wallet.zkExplorer() + tx[1].txHash.substring(8,)}" target="_blank">here</a>.
     `);
   }
 
@@ -150,8 +149,19 @@ export class ViewComponent implements OnInit {
       feeToken: 'ETH'
     });
     this.wallet.showToast(`
-    Your transaction was submitted! Track it <a href="${this.constants.ZK_EXPLORER + swap.txHash.substring(8,)}" target="_blank">here</a>.
+    Your transaction was submitted! Track it <a href="${this.wallet.zkExplorer() + swap.txHash.substring(8,)}" target="_blank">here</a>.
     `);
+    let deleteEndpoint = this.credentials.TRADE_SERVER + 'delete/' + this.nftId;
+    fetch(deleteEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors',
+      body: JSON.stringify({
+        id: order.id
+      })
+    });
   }
 
   copy(s) {

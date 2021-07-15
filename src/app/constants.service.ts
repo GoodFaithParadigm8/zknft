@@ -5,10 +5,15 @@ import { Injectable } from '@angular/core';
 })
 export class ConstantsService {
   PRECISION = 1e18;
-  ZKNETWORK = "rinkeby";
   MAP = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
   IPFS_GATEWAY = "https://ipfs.io/ipfs/";
-  ZK_EXPLORER = "https://rinkeby.zkscan.io/explorer/transactions/";
-  ETH_EXPLORER = "https://rinkeby.etherscan.io/tx/";
+
+  ZKNETWORK = "mainnet";
+  ZK_EXPLORER = "https://zkscan.io/explorer/transactions/";
+
+  // ZKNETWORK = "rinkeby";
+  // ZK_EXPLORER = "https://rinkeby.zkscan.io/explorer/transactions/";
+  
+  ETH_EXPLORER = "https://etherscan.io/tx/";
   ZK_WALLET = "https://wallet.zksync.io/";
 }

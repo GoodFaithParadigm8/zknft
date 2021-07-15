@@ -14,6 +14,7 @@ export class CollectionComponent implements OnInit {
 
   nftList: any;
   address: any;
+  blockiesOptions: any;
 
   constructor(private activatedRoute: ActivatedRoute, public wallet:WalletService, public utils: UtilsService, public constants: ConstantsService, public nftDataService: NftDataService) { 
     this.nftList = [];
@@ -21,6 +22,14 @@ export class CollectionComponent implements OnInit {
 
   ngOnInit(): void {
     this.address = this.activatedRoute.snapshot.paramMap.get('address');
+    this.blockiesOptions = { // All options are optional
+      seed: this.address, // seed used to generate icon data, default: random
+      color: '#dfe', // to manually specify the icon color, default: random
+      bgcolor: '#aaa', // choose a different background color, default: random
+      size: 15, // width/height of the icon in blocks, default: 8
+      scale: 3, // width/height of each block in pixels, default: 4
+      spotcolor: '#fff' // each pixel has a 13% chance of being of a third color,
+    }
 
     this.wallet.syncConnectedEvent.subscribe(() => {
       this.loadData();

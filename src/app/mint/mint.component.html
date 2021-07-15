@@ -20,7 +20,7 @@
     <div class="form-title">Upload Image</div>
     <div class="helper-text">An image for your NFT.</div>
     <div *ngIf="isLoading1" class="load-holder">
-      <div class="loader"></div><span class="loading-message-1"> &nbsp; {{loadingMessage1}}...</span>
+      <div class="loader"></div><span class="loading-message-1"> &nbsp; {{loadingMessage1}}</span>
     </div>
     <input type="file" accept="image/*" (change)="uploadImage($event.target.files)">
     <div class="preview-image-holder">
@@ -41,7 +41,7 @@
   </div>
 
   <div *ngIf="isLoading2" class="load-holder">
-    <div class="loader"></div><span class="loading-message-2"> &nbsp; {{loadingMessage2}}...</span>
+    <div class="loader"></div><span class="loading-message-2"> &nbsp; {{loadingMessage2}}</span>
   </div>
 
   <div>

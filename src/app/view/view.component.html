@@ -12,7 +12,7 @@
 
       <div class="button-bar" *ngIf="!isOwner">
         <button (click)="openOfferModal()">Make NFT Offer</button>
-        <button (click)="openOfferModal()">Make ETH Offer</button>
+        <!-- <button (click)="openOfferModal()">Make ETH Offer</button> -->
       </div>
 
       <div *ngIf="isOwner" class="transfer-holder clickable">
@@ -35,11 +35,12 @@
   </div>
 
   <div>
-    <div class="sub-title">Swap Offers</div>
-    <div *ngFor="let o of swapOffers">
-      <div>Nonce: {{o.data.nonce}}</div>
-      <div>NFT ID: {{o.data.tokenSell}}</div>
-      <button (click)="accept(o)">Accept Offer</button>
+    <div class="nft-swap-title">NFT Offers</div>
+    <div *ngFor="let o of nftSwapOffers" class="nft-swap-offer">
+      <div class="swap-title">{{o.assetData.name}}</div>
+      <div class="swap-id">ID: {{o.nftId}}</div>
+      <div><img class="swap-img" src="{{o.assetData.image}}" routerLink="/view/{{o.nftId}}"></div> 
+      <div class="accept-btn"><button (click)="accept(o)">Accept Offer</button></div>
     </div>
   </div>
   

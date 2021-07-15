@@ -52,7 +52,7 @@ export class MintComponent implements OnInit {
           ethAuthType: "ECDSA",
         });
         this.wallet.showToast(`
-        Your transaction was submitted! Track it <a href="${this.constants.ZK_EXPLORER + changePubkey.txHash.substring(8,)}">here</a>.
+        Your transaction was submitted! Track it <a href="${this.wallet.zkExplorer() + changePubkey.txHash.substring(8,)}">here</a>.
         `);
       }
     }
@@ -76,14 +76,14 @@ export class MintComponent implements OnInit {
       feeToken: "ETH"
     });
     this.wallet.showToast(`
-    Your transaction was submitted! Track it <a href="${this.constants.ZK_EXPLORER + mintTx.txHash.substring(8,)}" target="_blank">here</a>.
+    Your transaction was submitted! Track it <a href="${this.wallet.zkExplorer() + mintTx.txHash.substring(8,)}" target="_blank">here</a>.
     `);
     this.isLoading2 = false;
   }
 
   async uploadImage(files) {
     this.isLoading1 = true;
-    this.loadingMessage2 = "Uploading image..."
+    this.loadingMessage1 = "Uploading image..."
     let file = files.item(0);
     let ipfasHash = await this.nftStorageClient.storeBlob(file);
     this.image = this.constants.IPFS_GATEWAY + ipfasHash;

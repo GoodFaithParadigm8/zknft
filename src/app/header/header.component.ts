@@ -15,6 +15,7 @@ export class HeaderComponent implements OnInit {
   depositAmount: any;
   l1EthBalance: any;
   l2EthBalance: BigNumber;
+  blockiesOptions: any;
 
   constructor(public wallet:WalletService, public constants: ConstantsService) {
     this.l1EthBalance = new BigNumber(0);
@@ -26,11 +27,22 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  connectWallet() {
+  async connectWallet() {
+    let networkId = await this.wallet.web3.eth.net.getId();
+    this.wallet.networkID = networkId;
     this.wallet.connect(async () => {
       this.l1EthBalance = new BigNumber(await this.wallet.web3.eth.getBalance(this.wallet.userAddress)).div(this.constants.PRECISION);
       this.zkConnect();
     }, () => {}, false);
+    
+    this.blockiesOptions = { // All options are optional
+      seed: this.wallet.userAddress, // seed used to generate icon data, default: random
+      color: '#dfe', // to manually specify the icon color, default: random
+      bgcolor: '#aaa', // choose a different background color, default: random
+      size: 8, // width/height of the icon in blocks, default: 8
+      scale: 2, // width/height of each block in pixels, default: 4
+      spotcolor: '#fff' // each pixel has a 13% chance of being of a third color,
+    }
   }
 
   async zkConnect() {
@@ -81,7 +93,7 @@ export class HeaderComponent implements OnInit {
     });
     this.dismissNotActivated();
     this.wallet.showToast(`
-    Your transaction was submitted! Track it <a href="${this.constants.ZK_EXPLORER + changePubkey.txHash.substring(8,)}" target='_blank'>here</a>.
+    Your transaction was submitted! Track it <a href="${this.wallet.zkExplorer() + changePubkey.txHash.substring(8,)}" target='_blank'>here</a>.
     `);
   }
 }

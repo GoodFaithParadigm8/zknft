@@ -51,10 +51,28 @@ export class WalletService extends Web3Enabled {
 
   async zkConnect() {
     const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(this.web3.currentProvider as any).getSigner();
-    this.syncProvider = await getDefaultProvider((this.constants.ZKNETWORK as any), "HTTP");
+    this.syncProvider = await getDefaultProvider((this.getNetwork() as any), "HTTP");
     this.syncWallet = await Wallet.fromEthSigner(ethWallet, this.syncProvider);
     this.syncConnected = true;
     this.syncConnectedEvent.emit();
+  }
+
+  getNetwork() {
+    if (this.networkID === 1) {
+      return "mainnet";
+    }
+    else if (this.networkID === 4) {
+      return "rinkeby";
+    }
+  }
+
+  zkExplorer() {
+    if (this.networkID === 1) {
+      return "https://zkscan.io/explorer/transactions/";
+    }
+    else if (this.networkID === 4) {
+      return "https://rinkeby.zkscan.io/explorer/transactions/";
+    }
   }
 
   showToast(msg) {

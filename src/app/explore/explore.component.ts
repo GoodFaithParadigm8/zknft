@@ -32,7 +32,7 @@ export class ExploreComponent implements OnInit {
     if (this.query.substring(0, 2) === "0x") {
       this.router.navigate(["collection", this.query]);
     }
-    if (isNaN(parseInt(this.query))) {
+    else if (isNaN(parseInt(this.query))) {
       this.wallet.showToast("Invalid ID or Address.");
     }
     else {

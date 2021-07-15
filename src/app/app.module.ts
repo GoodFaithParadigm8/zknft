@@ -12,6 +12,7 @@ import { WalletComponent } from './wallet/wallet.component';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { ExploreComponent } from './explore/explore.component';
 import { FooterComponent } from './footer/footer.component';
+import {BlockiesModule} from 'angular-blockies';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { FooterComponent } from './footer/footer.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HotToastModule.forRoot()
+    HotToastModule.forRoot(),
+    BlockiesModule
   ],
   providers: [],
   bootstrap: [AppComponent]

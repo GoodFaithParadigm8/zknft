@@ -11,7 +11,8 @@
     <div class="right-aligned">
       <div class="wallet-holder">
         <button (click)="connectWallet()" class="connect-button">
-          <span *ngIf="wallet.connected">
+          <span *ngIf="wallet.connected" class="wallet-address">
+            <span><angular-blockies [options]="blockiesOptions"></angular-blockies> &nbsp;</span>
             {{wallet.userAddress.substring(0, 14)}}
           </span>
           <span *ngIf="!wallet.connected">
@@ -20,7 +21,7 @@
         </button>
       </div>
       <div class="eth-balance">
-        L2 Balance: {{l2EthBalance.toFormat(5)}} ETH &nbsp;
+        Network: {{this.wallet.getNetwork()}} | L2 Balance: {{l2EthBalance.toFormat(5)}} ETH &nbsp;
       </div>
     </div>
   </div>

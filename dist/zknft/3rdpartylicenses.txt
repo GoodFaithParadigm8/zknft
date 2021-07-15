@@ -2338,6 +2338,9 @@ THE SOFTWARE.
 
 
 
+angular-blockies
+WTFPL
+
 asn1.js
 MIT
 MIT License
