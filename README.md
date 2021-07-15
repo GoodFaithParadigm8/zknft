@@ -10,7 +10,8 @@ Steps to run locally:
 
 TODOs:
 
-0. Debug the issue where `syncProvider.getNFT(id)` is failing server-side.
+0. Debug the issue where `syncProvider.getNFT(id)` is failing server-side. (x)
 1. Improve UI for components, potentially overhaul and add Angular UI component framework (e.g. Bootstrap).
 2. Add the ability to offer/accept ETH for an NFT.
-3. Better show the assets being offered after a trade offer is made.
+3. Better show the assets being offered after a trade offer is made. (x)
+4. Rename `wallet` component to `portal` component to remove confusion.
