@@ -1,6 +1,6 @@
 # zknft
 
-[zkNFT](www.zknft.xyz) is a proof of concept NFT marketplace using the zkSync NFT API.
+[zkNFT](https://www.zknft.xyz) is a proof of concept NFT marketplace using the zkSync NFT API.
 
 Steps to run locally:
 
