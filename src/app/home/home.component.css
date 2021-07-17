@@ -53,14 +53,14 @@
   /* border-image: linear-gradient(45deg, var(--light-teal) 0%, var(--dark-teal) 100%); */
   border-image-slice: 1 1 1 1;
   font-weight: bold;
-  background-color: black;
+  background-color: var(--dark-gray);
   color: var(--light-gray-2);;
   border-radius: 4px;
 }
 
 .get-started:hover {
   color: white;
-  background-color: var(--dark-gray);
+  background-color: black;
 }
 
 .tri-cols {

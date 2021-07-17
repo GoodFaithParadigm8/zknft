@@ -6,6 +6,7 @@ import { CredentialsService } from '../credentials.service';
 import { DomSanitizer} from '@angular/platform-browser';
 import { NFTStorage } from 'nft.storage';
 const pinataSDK = require('@pinata/sdk');
+import autosize from 'autosize';
 
 @Component({
   selector: 'app-mint',
@@ -38,6 +39,9 @@ export class MintComponent implements OnInit {
     this.nftStorageClient = new NFTStorage({token: this.credentials.NFTSTORAGE_KEY});
     this.isLoading1 = false;
     this.isLoading2 = false;
+
+    // Auto-resize the textarea
+    autosize(document.querySelector('textarea'));
   }
 
   async mintNFT() {

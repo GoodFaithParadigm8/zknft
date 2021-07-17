@@ -17,18 +17,29 @@ button:hover {
 .nft-image {
   margin-top: 1.5rem;
   max-height: 20rem;
-  max-width: 100%;
+  width: 100%;
+  max-width: 20rem;
   border: 2px solid var(--light-gray-2);
   border-radius: 8px;
 }
 
 .description {
   margin-top: 1.5rem;
-  background-color: var(--light-gray-2);
-  padding: 0.75rem 0.5rem;
+  padding: 1rem 1rem;
   border-radius: 2px;
-  filter: drop-shadow(0 0 0.5rem var(--gray-1));
   margin-bottom: 0.5rem;
+  font-family: Inter;
+  color: white;
+  border: 2px solid var(--dark-gray);
+  border-radius: 8px;
+  line-height: 150%;
+}
+
+.make-offer-title {
+  font-size: 1.5rem;
+  font-weight: bolder;
+  color: white;
+  margin-bottom: 1rem;
 }
 
 .stats-title {
@@ -42,7 +53,8 @@ button:hover {
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
 }
-.stats > div {
+
+.stat-item {
   word-break: break-all;
   margin-top: 0.5rem;
   padding: 0.2rem 0.2rem;
@@ -54,7 +66,6 @@ button:hover {
 }
 .external-link {
   font-size: 0.9rem;
-  margin-top: 0.5rem;
   color: var(--light-gray-2);
   background-color: var(--dark-gray);
   border: 1px solid var(--gray);
@@ -64,6 +75,7 @@ button:hover {
 .external-link:hover {
   background-color: black;
   color: white;
+  border: 1px solid var(--gray-1);
 }
 .external-link-icon {
   width: 0.5rem;
@@ -79,9 +91,27 @@ button:hover {
   background-color: var(--light-gray-3);
 }
 
+.eth-offer-btn {
+  display: flex;
+  align-items: center;
+}
+
+.eth-logo {
+  width: 0.8rem;
+}
+
 .transfer-form {
   font-size: 0.85rem;
   width: 15rem;
+}
+
+.eth-input-holder {
+  margin: 1rem 1rem;
+  font-size: 1.2rem;
+}
+
+.eth-input-holder > input {
+  font-size: 1.2rem;
 }
 
 .nft-holder {
@@ -142,28 +172,27 @@ button:hover {
   border-radius: 8px;
 }
 
-.nft-swap-title {
+.swap-title {
   margin-top: 2rem;
   font-weight: bolder;
   font-size: 1.5rem;
-  padding: 0.5rem 0.5rem;
   color: white;
+  margin-bottom: 1rem;
 }
 
-.nft-swap-offer {
+.swap-offer {
   color: white;
   padding: 1rem 1rem;
 }
 
-.swap-title {
+.swap-name {
   font-size: 1.3rem;
-  line-height: 150%;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
 .swap-id {
   font-size: 1.1rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
 }
 
 .swap-img {
@@ -173,4 +202,9 @@ button:hover {
 
 .accept-btn {
   margin-top: 0.5rem;
+}
+
+.balance {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;;
 }

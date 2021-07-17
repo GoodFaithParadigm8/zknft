@@ -8,8 +8,8 @@
 }
 
 .nft-item {
-  height: 18rem;
-  width: 16rem;
+  height: 20rem;
+  width: 18rem;
   padding: 0.75rem 0.75rem;
   margin: 0.5rem 0.5rem;
   border-radius: 8px;
@@ -30,6 +30,7 @@
 
 .nft-image {
   width: 13rem;
+  height: 13rem;;
   object-fit: contain;
   border-radius: 10px;
   margin-left: auto;

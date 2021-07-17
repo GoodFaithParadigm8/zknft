@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { utils as zkUtils} from "zksync";
 import { NftDataService } from '../nftDataService';
 import { CredentialsService } from '../credentials.service';
+import { BigNumber } from "bignumber.js";
 
 @Component({
   selector: 'app-view',
@@ -18,17 +19,40 @@ export class ViewComponent implements OnInit {
   nft: any;
   isOwner: boolean;
   recipientAddress: any;
-  nftData: any;
   hasExternalLink: boolean;
   showTransfer: boolean;
   
   selectedNftId: any;
   ownedNftList: any;
   showOfferModal: boolean;
+  showEthModal: boolean;
+  l2EthBalance: BigNumber;
+  offerEthAmount: any;
 
   nftSwapOffers: any;
+  ethSwapOffers: any;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public wallet: WalletService, public utils: UtilsService, public constants: ConstantsService, public nftDataService: NftDataService, public credentials: CredentialsService) {
+    this.resetData();
+   }
+
+  ngOnInit(): void {
+    this.nftId = this.activatedRoute.snapshot.paramMap.get('id');
+    this.wallet.syncConnectedEvent.subscribe(() => {
+      this.resetData();
+      this.loadData();
+    });
+
+    this.activatedRoute.params.subscribe(routeParams => {
+      this.nftId = routeParams.id;
+      if (this.wallet.syncConnected) {
+        this.resetData();
+        this.loadData();
+      }
+    });
+  }
+
+  resetData() {
     this.isOwner = false;
     this.nft = {
       "name": "...",
@@ -39,30 +63,22 @@ export class ViewComponent implements OnInit {
     this.showTransfer = false;
     this.ownedNftList = [];
     this.showOfferModal = false;
+    this.showEthModal = false;
     this.nftSwapOffers = [];
-   }
-
-  ngOnInit(): void {
-    this.nftId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.wallet.syncConnectedEvent.subscribe(() => {
-      this.loadData();
-    });
-
-    this.activatedRoute.params.subscribe(routeParams => {
-      this.nftId = routeParams.id;
-      if (this.wallet.syncConnected) {
-        this.loadData();
-      }
-    });
+    this.ethSwapOffers = [];
   }
 
   async loadData() {
     const state = await this.wallet.syncWallet.getAccountState(this.wallet.userAddress);
     this.nft = await this.nftDataService.getData(this.nftId);
+
+    if (this.nft["external_url"] !== undefined) {
+      this.hasExternalLink = true;
+    }
+
     if (this.nftId in state.verified.nfts) {
       this.isOwner = true;
     }
-
     // Load swap offers from server
     let tradeEndpoint = this.credentials.TRADE_SERVER + 'assets/' + this.nftId;
     let response = await fetch(tradeEndpoint, {
@@ -74,10 +90,18 @@ export class ViewComponent implements OnInit {
     // Otherwise populate with blank object
     for (let o of swapOffers) {
       let id = parseInt(o.data.tokenSell);
-      if (id !== NaN) {
+      console.log(o);
+      if (id !== 0) {
         o["assetData"] = await this.nftDataService.getData(id);
         o["nftId"] = id;
+        if (o["assetData"]["external_url"] !== undefined) {
+          this.hasExternalLink = true;
+        }
         this.nftSwapOffers.push(o);
+      }
+      else {
+        o["ethAmount"] = (new BigNumber(o.data.amount)).div(new BigNumber(10**18));
+        this.ethSwapOffers.push(o);
       }
     }
   }
@@ -127,11 +151,46 @@ export class ViewComponent implements OnInit {
     }
   }
 
-  async closeOfferModal() {
+  closeOfferModal() {
     this.showOfferModal = false;
   }
 
-  async accept(order) {
+  async offerEth() {
+    let tokenSet = this.wallet.syncProvider.tokenSet;
+    
+    console.log(tokenSet.parseToken('ETH', this.offerEthAmount));
+    
+    const order = await this.wallet.syncWallet.getOrder({
+      tokenSell: 'ETH',
+      tokenBuy: parseInt(this.nftId),
+      amount: tokenSet.parseToken('ETH', this.offerEthAmount),
+      ratio: zkUtils.tokenRatio({
+          ETH: this.offerEthAmount,
+          [parseInt(this.nftId)]: 1
+      })
+    });
+    let tradeEndpoint = this.credentials.TRADE_SERVER + 'assets/' + this.nftId;
+    fetch(tradeEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors',
+      body: JSON.stringify(order)
+    });
+    this.closeEthModal();
+  }
+
+  async openEthModal() {
+    this.showEthModal = true;
+    this.l2EthBalance = new BigNumber((await this.wallet.syncWallet.getBalance("ETH"))/this.constants.PRECISION);
+  }
+
+  closeEthModal() {
+    this.showEthModal = false;
+  }
+
+  async acceptNft(order) {
     let order1 = order.data;
     let order2 = await this.wallet.syncWallet.getOrder({
       tokenSell: parseInt(this.nftId),
@@ -139,6 +198,39 @@ export class ViewComponent implements OnInit {
       amount: 1,
       ratio: zkUtils.tokenRatio({
           [parseInt(order.data.tokenSell)]: 1,
+          [parseInt(this.nftId)]: 1
+      })
+    });
+    const swap = await this.wallet.syncWallet.syncSwap({
+      orders: [
+        order1, order2
+      ],
+      feeToken: 'ETH'
+    });
+    this.wallet.showToast(`
+    Your transaction was submitted! Track it <a href="${this.wallet.zkExplorer() + swap.txHash.substring(8,)}" target="_blank">here</a>.
+    `);
+    let deleteEndpoint = this.credentials.TRADE_SERVER + 'delete/' + this.nftId;
+    fetch(deleteEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'cors',
+      body: JSON.stringify({
+        id: order.id
+      })
+    });
+  }
+
+  async acceptEth(order) {
+    let order1 = order.data;
+    let order2 = await this.wallet.syncWallet.getOrder({
+      tokenSell: parseInt(this.nftId),
+      tokenBuy: 'ETH',
+      amount: 1,
+      ratio: zkUtils.tokenRatio({
+          ETH: order.ethAmount,
           [parseInt(this.nftId)]: 1
       })
     });
