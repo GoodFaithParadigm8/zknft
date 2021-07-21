@@ -16,6 +16,7 @@ export class HeaderComponent implements OnInit {
   l1EthBalance: any;
   l2EthBalance: BigNumber;
   blockiesOptions: any;
+  networkName: any;
 
   constructor(public wallet:WalletService, public constants: ConstantsService) {
     this.l1EthBalance = new BigNumber(0);
@@ -25,11 +26,14 @@ export class HeaderComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  async loadData() {
+    this.networkName = await this.wallet.getNetwork();
   }
 
   async connectWallet() {
-    let networkId = await this.wallet.web3.eth.net.getId();
-    this.wallet.networkID = networkId;
     this.wallet.connect(async () => {
       this.l1EthBalance = new BigNumber(await this.wallet.web3.eth.getBalance(this.wallet.userAddress)).div(this.constants.PRECISION);
       this.zkConnect();

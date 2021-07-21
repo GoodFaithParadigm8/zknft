@@ -21,12 +21,24 @@ export class WalletService extends Web3Enabled {
   syncConnected: boolean;
   syncConnectedEvent: EventEmitter<null>;
 
+  providerConnected: boolean;
+  providerConnectedEvent: EventEmitter<null>;
+
   constructor(@Inject(WEB3) public web3: Web3, public constants: ConstantsService, private toastService: HotToastService, public credentials: CredentialsService) {
     super(web3, credentials);
     this.connectedEvent = new EventEmitter<null>();
     this.errorEvent = new EventEmitter<null>();
     this.syncConnectedEvent = new EventEmitter<null>();
     this.syncConnected = false;
+    this.providerConnectedEvent = new EventEmitter<null>();
+    this.providerConnected = false;
+    this.loadProvider();
+  }
+
+  async loadProvider() {
+    this.syncProvider = await getDefaultProvider((await this.getNetwork() as any), "HTTP");
+    this.providerConnected = true;
+    this.providerConnectedEvent.emit();
   }
 
   public get userAddress(): string | null {
@@ -51,17 +63,16 @@ export class WalletService extends Web3Enabled {
 
   async zkConnect() {
     const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(this.web3.currentProvider as any).getSigner();
-    this.syncProvider = await getDefaultProvider((this.getNetwork() as any), "HTTP");
     this.syncWallet = await Wallet.fromEthSigner(ethWallet, this.syncProvider);
     this.syncConnected = true;
     this.syncConnectedEvent.emit();
   }
 
-  getNetwork() {
-    if (this.networkID === 1) {
+  async getNetwork() {
+    if (await this.web3.eth.getChainId() === 1) {
       return "mainnet";
     }
-    else if (this.networkID === 4) {
+    else if (await this.web3.eth.getChainId() === 4) {
       return "rinkeby";
     }
   }
@@ -118,7 +129,7 @@ export class WalletService extends Web3Enabled {
       amount: amount,
     });
     this.showToast(`
-    Your transaction was submitted! Track it <a href="${this.constants.ETH_EXPLORER + withdraw.txHash.substring(8,)}" target='_blank'>here</a>.
+    Your transaction was submitted! Track it <a href="${this.zkExplorer() + withdraw.txHash.substring(8,)}" target='_blank'>here</a>.
     `);
   }
 }

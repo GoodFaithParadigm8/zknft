@@ -32,23 +32,30 @@ export class ViewComponent implements OnInit {
   nftSwapOffers: any;
   ethSwapOffers: any;
 
+  orderPending: boolean;
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public wallet: WalletService, public utils: UtilsService, public constants: ConstantsService, public nftDataService: NftDataService, public credentials: CredentialsService) {
     this.resetData();
    }
 
   ngOnInit(): void {
     this.nftId = this.activatedRoute.snapshot.paramMap.get('id');
-    this.wallet.syncConnectedEvent.subscribe(() => {
-      this.resetData();
-      this.loadData();
-    });
-
     this.activatedRoute.params.subscribe(routeParams => {
       this.nftId = routeParams.id;
       if (this.wallet.syncConnected) {
-        this.resetData();
         this.loadData();
       }
+      if (this.wallet.providerConnected) {
+        this.resetData();
+        this.loadStaticData();
+      }
+    });
+    this.wallet.providerConnectedEvent.subscribe(() => {
+      this.resetData();
+      this.loadStaticData();
+    });
+    this.wallet.syncConnectedEvent.subscribe(() => {
+      this.loadData();
     });
   }
 
@@ -70,14 +77,15 @@ export class ViewComponent implements OnInit {
 
   async loadData() {
     const state = await this.wallet.syncWallet.getAccountState(this.wallet.userAddress);
-    this.nft = await this.nftDataService.getData(this.nftId);
-
-    if (this.nft["external_url"] !== undefined) {
-      this.hasExternalLink = true;
-    }
-
     if (this.nftId in state.verified.nfts) {
       this.isOwner = true;
+    }
+  }
+
+  async loadStaticData() {
+    this.nft = await this.nftDataService.getData(this.nftId);
+    if (this.nft["external_url"] !== undefined) {
+      this.hasExternalLink = true;
     }
     // Load swap offers from server
     let tradeEndpoint = this.credentials.TRADE_SERVER + 'assets/' + this.nftId;
@@ -119,25 +127,30 @@ export class ViewComponent implements OnInit {
   }
 
   async offerNft() {
-    const order = await this.wallet.syncWallet.getOrder({
-      tokenSell: parseInt(this.selectedNftId),
-      tokenBuy: parseInt(this.nftId),
-      amount: 1,
-      ratio: zkUtils.tokenRatio({
-          [parseInt(this.selectedNftId)]: 1,
-          [parseInt(this.nftId)]: 1
-      })
-    });
-    let tradeEndpoint = this.credentials.TRADE_SERVER + 'assets/' + this.nftId;
-    fetch(tradeEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      mode: 'cors',
-      body: JSON.stringify(order)
-    });
-    this.closeOfferModal();
+    this.orderPending = true;
+    if (! this.orderPending) {
+      const order = await this.wallet.syncWallet.getOrder({
+        tokenSell: parseInt(this.selectedNftId),
+        tokenBuy: parseInt(this.nftId),
+        amount: 1,
+        ratio: zkUtils.tokenRatio({
+            [parseInt(this.selectedNftId)]: 1,
+            [parseInt(this.nftId)]: 1
+        })
+      });
+      let tradeEndpoint = this.credentials.TRADE_SERVER + 'assets/' + this.nftId;
+      fetch(tradeEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+        body: JSON.stringify(order)
+      });
+      this.closeOfferModal();
+      this.wallet.showToast('Your offer has been submitted!');
+      this.orderPending = false;
+    }
   }
 
   async openOfferModal() {
@@ -179,6 +192,7 @@ export class ViewComponent implements OnInit {
       body: JSON.stringify(order)
     });
     this.closeEthModal();
+    this.wallet.showToast('Your offer has been submitted!');
   }
 
   async openEthModal() {

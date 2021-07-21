@@ -5,7 +5,7 @@ import { ExploreComponent } from './explore/explore.component';
 import { HomeComponent } from './home/home.component';
 import { MintComponent } from './mint/mint.component';
 import { ViewComponent } from './view/view.component';
-import { WalletComponent } from './wallet/wallet.component';
+import { PortalComponent } from './portal/portal.component';
 
 const routes: Routes = [
   {
@@ -25,8 +25,8 @@ const routes: Routes = [
     component: ViewComponent
   },
   {
-    path: 'wallet',
-    component: WalletComponent
+    path: 'portal',
+    component: PortalComponent
   },
   {
     path: 'explore',

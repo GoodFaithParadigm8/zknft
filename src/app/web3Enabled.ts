@@ -20,13 +20,14 @@ export class Web3Enabled {
     // this.networkID = 4; 
     // for ropsten
     // this.networkID = 3; 
-    this.networkID = 1;
+    // this.networkID = 1;
     this.state = {
       address: null
     };
   }
 
   async connect(onConnected, onError, isStartupMode: boolean) {
+    this.networkID = await this.web3.eth.getChainId();
     if (!this.assistInstance) {
       const genericMobileWalletConfig = {
         name: 'Web3 wallet (e.g. MetaMask)',

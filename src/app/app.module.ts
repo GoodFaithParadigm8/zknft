@@ -8,7 +8,7 @@ import { MintComponent } from './mint/mint.component';
 import { ViewComponent } from './view/view.component';
 import { FormsModule } from '@angular/forms';
 import { CollectionComponent } from './collection/collection.component';
-import { WalletComponent } from './wallet/wallet.component';
+import { PortalComponent } from './portal/portal.component';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { ExploreComponent } from './explore/explore.component';
 import { FooterComponent } from './footer/footer.component';
@@ -22,7 +22,7 @@ import {BlockiesModule} from 'angular-blockies';
     MintComponent,
     ViewComponent,
     CollectionComponent,
-    WalletComponent,
+    PortalComponent,
     ExploreComponent,
     FooterComponent,
   ],

@@ -11,17 +11,17 @@
     <div class="right-aligned">
       <div class="wallet-holder">
         <button (click)="connectWallet()" class="connect-button">
-          <span *ngIf="wallet.connected" class="wallet-address">
-            <span><angular-blockies [options]="blockiesOptions"></angular-blockies> &nbsp;</span>
-            {{wallet.userAddress.substring(0, 14)}}
-          </span>
           <span *ngIf="!wallet.connected">
             <span class="grayscale">🏦</span> Connect Wallet
+          </span>
+          <span class="wallet-address" *ngIf="wallet.connected">
+            <span><angular-blockies [options]="blockiesOptions"></angular-blockies> &nbsp;</span>
+            {{wallet.userAddress.substring(0, 14)}}
           </span>
         </button>
       </div>
       <div class="eth-balance">
-        Network: {{this.wallet.getNetwork()}} | L2 Balance: {{l2EthBalance.toFormat(5)}} ETH &nbsp;
+        Network: {{networkName}} | L2 Balance: {{l2EthBalance.toFormat(5)}} ETH &nbsp;
       </div>
     </div>
   </div>
@@ -30,7 +30,7 @@
     <div class="menu-link" routerLink="/mint"><span class="grayscale">🖌️</span> Mint</div>
     <div class="menu-link" routerLink="/explore"><span class="grayscale">🔍</span> Explore</div>
     <div class="menu-link" routerLink="/collection/{{wallet.userAddress}}"><span class="grayscale">🖼️</span> My NFTs</div>
-    <div class="menu-link" routerLink="/wallet"><span class="grayscale">🌀</span> L2 Portal</div>
+    <div class="menu-link" routerLink="/portal"><span class="grayscale">🌀</span> L2 Portal</div>
   </div>
 
   <div class="modal" *ngIf="noFunds">

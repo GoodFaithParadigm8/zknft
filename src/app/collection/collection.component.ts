@@ -31,19 +31,19 @@ export class CollectionComponent implements OnInit {
       spotcolor: '#fff' // each pixel has a 13% chance of being of a third color,
     }
 
-    this.wallet.syncConnectedEvent.subscribe(() => {
-      this.loadData();
+    this.wallet.providerConnectedEvent.subscribe(() => {
+      this.loadStaticData();
     });
 
     this.activatedRoute.params.subscribe(routeParams => {
       this.address = routeParams.address;
-      if (this.wallet.syncConnected) {
-        this.loadData();
+      if (this.wallet.providerConnected) {
+        this.loadStaticData();
       }
     });
   }
 
-  async loadData() {
+  async loadStaticData() {
     this.nftList = [];
     const state = await this.wallet.syncProvider.getState(this.address);
     for (let key in state.committed.nfts) {
