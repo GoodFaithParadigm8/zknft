@@ -13,6 +13,10 @@
   --pink: #ff00ff;
 }
 
+.hot-toast-close-btn {
+  background-color: white !important;
+}
+
 a {
   color: var(--light-teal);
 }

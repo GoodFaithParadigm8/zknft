@@ -98,7 +98,6 @@ export class ViewComponent implements OnInit {
     // Otherwise populate with blank object
     for (let o of swapOffers) {
       let id = parseInt(o.data.tokenSell);
-      console.log(o);
       if (id !== 0) {
         o["assetData"] = await this.nftDataService.getData(id);
         o["nftId"] = id;

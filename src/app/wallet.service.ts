@@ -90,7 +90,7 @@ export class WalletService extends Web3Enabled {
     this.toastService.show(
       msg, 
       {
-        autoClose: true,
+        autoClose: false,
         dismissible: true,
         position: 'bottom-right',
         style: {

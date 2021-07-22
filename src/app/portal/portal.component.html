@@ -1,5 +1,8 @@
 <div class="container">
   <div class="title">Bridge Funds</div>
+  <div class="info">
+    For more customizable deposit/withdraw options, please use the official zkSync Wallet app <a href="https://wallet.zksync.io/" target="_blank">here</a>.
+  </div>
   <div class="two-cols">
     <div class="card">
       <div class="sub-title">L1 → L2</div>
@@ -14,6 +17,8 @@
     <div class="card">
       <div class="sub-title">L2 → L1</div>
       <div class="eth-balance" (click)="setWithdrawAmount()">L2 Balance: {{l2EthBalance.toFormat(8)}} ETH</div>
+      <div class="eth-balance">Withdraw Fee: {{withdrawFee.toFormat(8)}} ETH</div>
+      <div class="eth-balance" (click)="setWithdrawAmount()">Max Withdraw Balance: {{maxL2WithdrawAmount.toFormat(8)}} ETH</div>
       <div>
         <input type="text" [(ngModel)]="withdrawAmount" placeholder="0.01">
       </div>

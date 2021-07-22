@@ -56,7 +56,7 @@ export class MintComponent implements OnInit {
           ethAuthType: "ECDSA",
         });
         this.wallet.showToast(`
-        Your transaction was submitted! Track it <a href="${this.wallet.zkExplorer() + changePubkey.txHash.substring(8,)}">here</a>.
+        Your transaction was submitted! Track it <a href="${this.wallet.zkExplorer() + changePubkey.txHash.substring(8,)}" target='_blank'>here</a>.
         `);
       }
     }

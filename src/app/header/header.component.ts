@@ -34,9 +34,10 @@ export class HeaderComponent implements OnInit {
   }
 
   async connectWallet() {
+    this.networkName = await this.wallet.getNetwork();
     this.wallet.connect(async () => {
       this.l1EthBalance = new BigNumber(await this.wallet.web3.eth.getBalance(this.wallet.userAddress)).div(this.constants.PRECISION);
-      this.zkConnect();
+      await this.zkConnect();
     }, () => {}, false);
     
     this.blockiesOptions = { // All options are optional
@@ -56,6 +57,7 @@ export class HeaderComponent implements OnInit {
       this.noFunds = true;
     }
     else if (!(await this.wallet.syncWallet.isSigningKeySet())) {
+      console.log(await this.wallet.syncWallet.isSigningKeySet());
       if ((await this.wallet.syncWallet.getAccountId()) !== undefined) {  
         this.notActivated = true;
       }
