@@ -5,6 +5,7 @@ import { ConstantsService } from "../constants.service";
 import { CredentialsService } from '../credentials.service';
 import { DomSanitizer} from '@angular/platform-browser';
 import { NFTStorage } from 'nft.storage';
+import { FormBuilder, Validators } from '@angular/forms';
 const pinataSDK = require('@pinata/sdk');
 import autosize from 'autosize';
 
@@ -31,7 +32,9 @@ export class MintComponent implements OnInit {
   isLoading2: any;
   loadingMessage2: any;
 
-  constructor(public wallet:WalletService, public utils: UtilsService, public constants: ConstantsService, public credentials: CredentialsService, private sanitizer: DomSanitizer) { }
+  attributes = this.fb.array([]);
+
+  constructor(public wallet:WalletService, public utils: UtilsService, public constants: ConstantsService, public credentials: CredentialsService, private sanitizer: DomSanitizer, private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.imageURL = "../assets/placeholder.svg";
@@ -42,6 +45,18 @@ export class MintComponent implements OnInit {
 
     // Auto-resize the textarea
     autosize(document.querySelector('textarea'));
+  }
+
+  addAttribute() {
+    const newAttribute = this.fb.group({
+      trait_type: ['', Validators.required],
+      value: ['', Validators.required]
+    });
+    this.attributes.push(newAttribute);
+  }
+
+  deleteAttribute(i) {
+    this.attributes.removeAt(i);
   }
 
   async mintNFT() {
@@ -62,12 +77,22 @@ export class MintComponent implements OnInit {
     }
 
     this.loadingMessage2 = "Uploading NFT data...";
-    
+
+    // Parse through attributes
+    let attributesList = [];
+    for (let i = 0; i < this.attributes.length; i++) {
+      let item = (this.attributes.at(i) as any).controls;
+      let a = {};
+      a["trait_type"] = item.trait_type.value;
+      a["value"] = item.value.value;
+      attributesList.push(a);
+    }
     const body = {
       "name": this.name,
       "image": this.image,
       "description": this.description,
-      "external_url": this.externalURL
+      "external_url": this.externalURL,
+      "attributes": attributesList
     }
     let results = await this.pinata.pinJSONToIPFS(body);
     let ipfsHash = results["IpfsHash"];

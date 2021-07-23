@@ -35,6 +35,22 @@ button:hover {
   line-height: 150%;
 }
 
+.attributes-title {
+  margin-top: 1rem;
+  padding: 1rem 1rem;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.attribute-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.attributes-list {
+  margin-top: 0rem;
+}
+
 .make-offer-title {
   font-size: 1.5rem;
   font-weight: bolder;

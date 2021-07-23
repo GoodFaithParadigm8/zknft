@@ -42,7 +42,7 @@ export class NftDataService {
       // Assume we don't know anything about it at first
       let baseNftData = {
         "name": "Name Unknown",
-        "image": "https://i.imgur.com/nwZRdjr.png"
+        "image": "https://ipfs.io/ipfs/QmShBq4Xiho4SZf3PxAPLpbYvfHC2MtkpwnhtjN7v8h8iE"
       };
               
       // Grab info from the syncProvider

@@ -20,6 +20,7 @@ export class ViewComponent implements OnInit {
   isOwner: boolean;
   recipientAddress: any;
   hasExternalLink: boolean;
+  hasAttributes: boolean;
   showTransfer: boolean;
   
   selectedNftId: any;
@@ -67,6 +68,7 @@ export class ViewComponent implements OnInit {
       "description": "..."
     };
     this.hasExternalLink = false;
+    this.hasAttributes = false;
     this.showTransfer = false;
     this.ownedNftList = [];
     this.showOfferModal = false;
@@ -84,9 +86,14 @@ export class ViewComponent implements OnInit {
 
   async loadStaticData() {
     this.nft = await this.nftDataService.getData(this.nftId);
+
     if (this.nft["external_url"] !== undefined) {
       this.hasExternalLink = true;
     }
+    if (this.nft["attributes"] !== undefined) {
+      this.hasAttributes = true;
+    }
+
     // Load swap offers from server
     let tradeEndpoint = this.credentials.TRADE_SERVER + 'assets/' + this.nftId;
     let response = await fetch(tradeEndpoint, {

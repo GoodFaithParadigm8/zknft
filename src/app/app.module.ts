@@ -6,7 +6,7 @@ import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { MintComponent } from './mint/mint.component';
 import { ViewComponent } from './view/view.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CollectionComponent } from './collection/collection.component';
 import { PortalComponent } from './portal/portal.component';
 import { HotToastModule } from '@ngneat/hot-toast';
@@ -30,6 +30,7 @@ import {BlockiesModule} from 'angular-blockies';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HotToastModule.forRoot(),
     BlockiesModule
   ],
