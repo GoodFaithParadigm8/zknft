@@ -17,12 +17,14 @@ export class HeaderComponent implements OnInit {
   l2EthBalance: BigNumber;
   blockiesOptions: any;
   networkName: any;
+  isPending: any;
 
   constructor(public wallet:WalletService, public constants: ConstantsService) {
     this.l1EthBalance = new BigNumber(0);
     this.l2EthBalance = new BigNumber(0);
     this.noFunds = false;
     this.notActivated = false;
+    this.isPending = false;
    }
 
   ngOnInit(): void {
@@ -57,7 +59,6 @@ export class HeaderComponent implements OnInit {
       this.noFunds = true;
     }
     else if (!(await this.wallet.syncWallet.isSigningKeySet())) {
-      console.log(await this.wallet.syncWallet.isSigningKeySet());
       if ((await this.wallet.syncWallet.getAccountId()) !== undefined) {  
         this.notActivated = true;
       }
@@ -73,23 +74,27 @@ export class HeaderComponent implements OnInit {
   }
 
   async depositETH() {
-    const deposit = await this.wallet.syncWallet.depositToSyncFromEthereum({
-      depositTo: this.wallet.syncWallet.address(),
-      token: "ETH",
-      amount: new BigNumber(this.depositAmount).times(this.constants.PRECISION).integerValue().toFixed(),
-      ethTxOptions: {
-        gasLimit: 200000
-      }
-    });
-    this.wallet.showToast(`
-    Your transaction was submitted! Track it <a href="${this.constants.ETH_EXPLORER + deposit.ethTx.hash}" target='_blank'>here</a>.
-    `);
-    this.dismissNoFunds();
-    const depositReceipt = await deposit.awaitVerifyReceipt();
-    this.wallet.showToast(`
-    Your transaction was verified!
-    `);
-    await this.zkConnect();
+    if (! this.isPending) {
+      this.isPending = true;
+      const deposit = await this.wallet.syncWallet.depositToSyncFromEthereum({
+        depositTo: this.wallet.syncWallet.address(),
+        token: "ETH",
+        amount: new BigNumber(this.depositAmount).times(this.constants.PRECISION).integerValue().toFixed(),
+        ethTxOptions: {
+          gasLimit: 200000
+        }
+      });
+      this.wallet.showToast(`
+      Your transaction was submitted! Track it <a href="${this.constants.ETH_EXPLORER + deposit.ethTx.hash}" target='_blank'>here</a>.
+      `);
+      this.dismissNoFunds();
+      await deposit.awaitVerifyReceipt();
+      this.wallet.showToast(`
+      Your transaction was verified!
+      `);
+      await this.zkConnect();
+      this.isPending = false;
+    }
   }
 
   async setSigningKey() {

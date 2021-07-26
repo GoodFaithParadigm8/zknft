@@ -133,8 +133,8 @@ export class ViewComponent implements OnInit {
   }
 
   async offerNft() {
-    this.orderPending = true;
     if (! this.orderPending) {
+      this.orderPending = true;
       const order = await this.wallet.syncWallet.getOrder({
         tokenSell: parseInt(this.selectedNftId),
         tokenBuy: parseInt(this.nftId),
@@ -175,30 +175,31 @@ export class ViewComponent implements OnInit {
   }
 
   async offerEth() {
-    let tokenSet = this.wallet.syncProvider.tokenSet;
-    
-    console.log(tokenSet.parseToken('ETH', this.offerEthAmount));
-    
-    const order = await this.wallet.syncWallet.getOrder({
-      tokenSell: 'ETH',
-      tokenBuy: parseInt(this.nftId),
-      amount: tokenSet.parseToken('ETH', this.offerEthAmount),
-      ratio: zkUtils.tokenRatio({
-          ETH: this.offerEthAmount,
-          [parseInt(this.nftId)]: 1
-      })
-    });
-    let tradeEndpoint = this.credentials.TRADE_SERVER + 'assets/' + this.nftId;
-    fetch(tradeEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      mode: 'cors',
-      body: JSON.stringify(order)
-    });
-    this.closeEthModal();
-    this.wallet.showToast('Your offer has been submitted!');
+    if (! this.orderPending) {
+      this.orderPending = true;
+      let tokenSet = this.wallet.syncProvider.tokenSet;
+      const order = await this.wallet.syncWallet.getOrder({
+        tokenSell: 'ETH',
+        tokenBuy: parseInt(this.nftId),
+        amount: tokenSet.parseToken('ETH', this.offerEthAmount),
+        ratio: zkUtils.tokenRatio({
+            ETH: this.offerEthAmount,
+            [parseInt(this.nftId)]: 1
+        })
+      });
+      let tradeEndpoint = this.credentials.TRADE_SERVER + 'assets/' + this.nftId;
+      fetch(tradeEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+        body: JSON.stringify(order)
+      });
+      this.closeEthModal();
+      this.wallet.showToast('Your offer has been submitted!');
+      this.orderPending = false;
+    }
   }
 
   async openEthModal() {
